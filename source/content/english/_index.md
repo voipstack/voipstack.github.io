@@ -16,11 +16,11 @@ features:
     content: "Voipstack is a comprehensive platform for the observability of your company"
     bulletpoints:
       - "One and easy platform"
-      - "Measure performance of your company"
       - "Fully responsive on all devices"
       - "Professional support on VOIP"
       - "Supported Asterisk"
       - "Supported FreeSWITCH"
+      - "Effortless Integration"
     button:
       enable: false
       label: "Get Started Now"
@@ -30,8 +30,8 @@ features:
     image: "/images/service-3.png"
     content: "With VoipSTACK, you can know the performance of the operation in realtime."
     bulletpoints:
-      - "Pay as you go, only pay for what you see."
-      - "Intutive interfaz for Operators."
+      - "Pay as you go, you only pay for the processed events."
+      - "Intuitive interfaz for Callcenter/Contact centers/PBX."
       - "Multi-Tenant Support."
       - "Built on cutting-edge technology to keep your projects up-to-date with the latest web standards."
     button:

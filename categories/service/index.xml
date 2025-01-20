@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Service on VoipSTACK</title>
+    <link>//localhost:1313/categories/service/</link>
+    <description>Recent content in Service on VoipSTACK</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 20 Jan 2025 21:28:13 +0200</lastBuildDate>
+    <atom:link href="//localhost:1313/categories/service/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Operator Panel</title>
+      <link>//localhost:1313/service/panel/</link>
+      <pubDate>Mon, 20 Jan 2025 21:28:13 +0200</pubDate>
+      <guid>//localhost:1313/service/panel/</guid>
+      <description>&lt;h2 id=&#34;effortless-operator-panel-enhance-your-business-with-our-operator-panel&#34;&gt;Effortless Operator Panel: Enhance Your Business with Our Operator Panel.&lt;/h2&gt;&#xA;&lt;p&gt;We’re introducing an operator panel designed to optimize and streamline your VoIP services efficiently, intuitively, and securely.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
