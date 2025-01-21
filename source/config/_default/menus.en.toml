@@ -11,6 +11,11 @@ name = "Panel"
 url = "/service/panel"
 weight = 1
 
+[[main]]
+name = "Seamless PBX"
+url = "/service/seamless_pbx"
+weight = 1
+
 # footer menu
 [[footer]]
 name = "About"
