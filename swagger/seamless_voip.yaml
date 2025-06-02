@@ -12,42 +12,461 @@ servers:
     description: Internal staging server for testing
 
 paths:
-  /provider/v1/state/:
+  /provider/v1/{softswitch_id}/state:
     post:
-      summary: Returns a state of pbx
-      description: .
+      summary: Get softswitch data
       responses:
-        "200": # status code
-          description: A JSON array of user names
+        '200':
+          description: Successful response
           content:
             application/json:
               schema:
-                type: object
-                items:
-                  type: string
-  /provider/v1/action/:
+                $ref: '#/components/schemas/SoftswitchDataResponse'
+              examples:
+                example1:
+                  value:
+                    data:
+                      softswitch_id: "5b7c24e1-62c9-4df0-ae71-b1c4a3590ddf"
+                      extensions:
+                        "1000@172.15.238.10":
+                          id: "1000"
+                          meta: {}
+                          name: "1000"
+                          registered: false
+                          domain: "172.15.238.10"
+                          ref: "1000@172.15.238.10"
+                      calls:
+                        "d3a0c917-39ea-42c8-898e-9fed8cb7356d":
+                          call_uuid: "d3a0c917-39ea-42c8-898e-9fed8cb7356d"
+                          state: "answered"
+                          duration_secs: 19532863
+                          source:
+                            name: "1000"
+                            number: "1000"
+                            ref: ["1000@172.15.238.10"]
+                          destination:
+                            name: "9196"
+                            number: "9196"
+                            ref: []
+                          direction:
+                            "1000@172.15.238.10": "outbound"
+                      usermeta: {}
+                      queues: {}
+                      agents: {}
+                      tiers: {}
+  /provider/v1/{softswitch_id}/action:
     post:
-      summary: Returns a state of pbx
-      description: .
+      summary: Perform an action (e.g., hangup a call)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProviderActionRequest'
+            example:
+              action: "hangup"
+              input: ""
+              ref: "d3a0c917-39ea-42c8-898e-9fed8cb7356d"
+              type: "call"
       responses:
-        "200": # status code
-          description: A JSON array of user names
+        '200':
+          description: Action performed successfully
           content:
             application/json:
               schema:
-                type: object
-                items:
-                  type: string
-  /provider/v1/callback/:
-    post:
-      summary: Returns a state of pbx
-      description: .
+                $ref: '#/components/schemas/ProviderActionResponse'
+              example:
+                data:
+                  status: "OK"
+  /provider/v1/{softswitch_id}/extension:
+    put:
+      summary: Update extension attributes.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProviderExtensionRequest'
+            example:
+              ref: "1000@172.15.238.10"
+              name: "new name"
       responses:
-        "200": # status code
-          description: A JSON array of user names
+        '200':
+          description: Update performed successfully
           content:
             application/json:
               schema:
-                type: object
-                items:
-                  type: string
+                $ref: '#/components/schemas/ProviderExtensionResponse'
+              example:
+                data:
+                  status: "OK"
+  /provider/v1/{softswitch_id}/callcenter_queue:
+    put:
+      summary: Update callcenter queue attributes.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProviderCallcenterQueueRequest'
+            example:
+              ref: "support@default"
+              name: "new queue name"
+      responses:
+        '200':
+          description: Update performed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProviderCallcenterQueueResponse'
+              example:
+                data:
+                  status: "OK"
+  /provider/v1/{softswitch_id}/usermeta:
+    put:
+      summary: Update custom state attributes.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProviderUserMetaRequest'
+            example:
+              ref: "support@default"
+              name: "new queue name"
+      responses:
+        '200':
+          description: Update performed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProviderUserMetaResponse'
+              example:
+                data:
+                  status: "OK"
+  /provider/v1/{softswitch_id}/statistics:
+    post:
+      summary: Get statistics for a specific softswitch
+      parameters:
+        - name: softswitch_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          example: 91986ade-df5c-4bd1-b2cb-18868383bdc2
+      responses:
+        '200':
+          description: Statistics retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatisticsResponse'
+              example:
+                data:
+                  events:
+                    billing-actions:
+                      count: 0
+                      bytes: 0
+                    billing-events:
+                      count: 56
+                      bytes: 132696
+                  softswitch_id: "91986ade-df5c-4bd1-b2cb-18868383bdc2"
+                  events_bytes: 358203
+
+  /provider/v1/{softswitch_id}/invoices:
+    post:
+      summary: Generate or retrieve invoices for a softswitch
+      parameters:
+        - name: softswitch_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          example: 4f9e2278-0465-40a5-9afa-8dc636599438
+      responses:
+        '200':
+          description: Invoices retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceResponse'
+              example:
+                data:
+                  softswitch_id: "4f9e2278-0465-40a5-9afa-8dc636599438"
+                  invoices:
+                    - statistics:
+                        events:
+                          billing-actions:
+                            count: 0
+                            bytes: 0
+                          billing-events:
+                            count: 56
+                            bytes: 132696
+                        events_bytes: 358203
+                      amount_eur: 549
+                      created_at: "2025-06-02T18:41:22.994736Z"
+                      invoice_ref: "1748889682"
+
+components:
+  schemas:
+    SoftswitchDataResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/SoftswitchData'
+
+    SoftswitchData:
+      type: object
+      properties:
+        softswitch_id:
+          type: string
+          format: uuid
+          example: "5b7c24e1-62c9-4df0-ae71-b1c4a3590ddf"
+        extensions:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Extension'
+        calls:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Call'
+        usermeta:
+          type: object
+          additionalProperties: {}
+        queues:
+          type: object
+          additionalProperties: {}
+        agents:
+          type: object
+          additionalProperties: {}
+        tiers:
+          type: object
+          additionalProperties: {}
+
+    Extension:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "1000"
+        meta:
+          type: object
+          additionalProperties: {}
+        name:
+          type: string
+          example: "1000"
+        registered:
+          type: boolean
+          example: false
+        domain:
+          type: string
+          format: hostname
+          example: "172.15.238.10"
+        ref:
+          type: string
+          example: "1000@172.15.238.10"
+
+    Call:
+      type: object
+      properties:
+        call_uuid:
+          type: string
+          format: uuid
+          example: "d3a0c917-39ea-42c8-898e-9fed8cb7356d"
+        state:
+          type: string
+          enum: [answered, ringing, failed, missed, hangup]
+          example: "answered"
+        duration_secs:
+          type: integer
+          example: 19532863
+        source:
+          $ref: '#/components/schemas/Endpoint'
+        destination:
+          $ref: '#/components/schemas/Endpoint'
+        direction:
+          type: object
+          additionalProperties:
+            type: string
+            enum: [inbound, outbound]
+            example: "outbound"
+
+    Endpoint:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "1000"
+        number:
+          type: string
+          example: "1000"
+        ref:
+          type: array
+          items:
+            type: string
+          example: ["1000@172.15.238.10"]
+
+    ProviderActionRequest:
+      type: object
+      required:
+        - action
+        - ref
+        - type
+      properties:
+        action:
+          type: string
+          description: The action to perform
+          example: "hangup"
+        input:
+          type: string
+          description: Optional input for the action
+          example: ""
+        ref:
+          type: string
+          description: Reference ID of the target object (e.g., call UUID)
+          example: "d3a0c917-39ea-42c8-898e-9fed8cb7356d"
+        type:
+          type: string
+          description: Type of object to apply the action to
+          example: "call"
+
+    ProviderActionResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            status:
+              type: string
+              example: "OK"
+
+    ProviderExtensionRequest:
+      type: object
+      required:
+        - ref
+        - name
+      properties:
+        ref:
+          type: string
+          description: Reference ID of the extension.
+          example: "1000@172.15.238.10"
+        name:
+          type: string
+          description: New name.
+          example: "new name"
+
+    ProviderExtensionResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            status:
+              type: string
+              example: "OK"
+
+    ProviderCallcenterQueueRequest:
+      type: object
+      required:
+        - ref
+        - name
+      properties:
+        ref:
+          type: string
+          description: Reference ID of the callcenter queue.
+          example: "support@default"
+        name:
+          type: string
+          description: New name.
+          example: "new name"
+
+    ProviderCallcenterQueueResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            status:
+              type: string
+              example: "OK"
+
+    ProviderUserMetaRequest:
+      type: object
+
+    ProviderUserMetaResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            status:
+              type: string
+              example: "OK"
+    StatisticsResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            events:
+              type: object
+              properties:
+                billing-actions:
+                  type: object
+                  properties:
+                    count:
+                      type: integer
+                      example: 0
+                    bytes:
+                      type: integer
+                      example: 0
+                billing-events:
+                  type: object
+                  properties:
+                    count:
+                      type: integer
+                      example: 56
+                    bytes:
+                      type: integer
+                      example: 132696
+            softswitch_id:
+              type: string
+              format: uuid
+              example: "91986ade-df5c-4bd1-b2cb-18868383bdc2"
+            events_bytes:
+              type: integer
+              example: 358203
+            amount_eur:
+              type: number
+              format: float
+              example: 549
+    InvoiceResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            softswitch_id:
+              type: string
+              format: uuid
+              example: "4f9e2278-0465-40a5-9afa-8dc636599438"
+            invoices:
+              type: array
+              items:
+                $ref: '#/components/schemas/Invoice'
+
+    Invoice:
+      type: object
+      properties:
+        statistics:
+          $ref: '#/components/schemas/Statistics'
+        created_at:
+          type: string
+          format: date-time
+          example: "2025-06-02T18:41:22.994736Z"
+        invoice_ref:
+          type: string
+          example: "1748889682"
+
