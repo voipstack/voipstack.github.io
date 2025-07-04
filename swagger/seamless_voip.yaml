@@ -64,6 +64,7 @@ paths:
             schema:
               $ref: '#/components/schemas/ProviderActionRequest'
             example:
+              id: "abc123"
               action: "hangup"
               input: ""
               ref: "d3a0c917-39ea-42c8-898e-9fed8cb7356d"
@@ -311,10 +312,14 @@ components:
     ProviderActionRequest:
       type: object
       required:
+        - id
         - action
         - ref
         - type
       properties:
+        id:
+          type: string
+          description: The action unique id
         action:
           type: string
           description: The action to perform
@@ -331,7 +336,6 @@ components:
           type: string
           description: Type of object to apply the action to
           example: "call"
-
     ProviderActionResponse:
       type: object
       properties:
